@@ -139,8 +139,8 @@ impl<'tcx, Tag> LocalValue<Tag> {
     }
 }
 
-impl<'b, 'a, 'mir, 'tcx, M: Machine<'a, 'mir, 'tcx>> HasDataLayout
-    for &'b EvalContext<'a, 'mir, 'tcx, M>
+impl<'a, 'mir, 'tcx, M: Machine<'a, 'mir, 'tcx>> HasDataLayout
+    for &EvalContext<'a, 'mir, 'tcx, M>
 {
     #[inline]
     fn data_layout(&self) -> &layout::TargetDataLayout {
@@ -148,8 +148,8 @@ impl<'b, 'a, 'mir, 'tcx, M: Machine<'a, 'mir, 'tcx>> HasDataLayout
     }
 }
 
-impl<'c, 'b, 'a, 'mir, 'tcx, M: Machine<'a, 'mir, 'tcx>> HasDataLayout
-    for &'c &'b mut EvalContext<'a, 'mir, 'tcx, M>
+impl<'a, 'mir, 'tcx, M: Machine<'a, 'mir, 'tcx>> HasDataLayout
+    for &&EvalContext<'a, 'mir, 'tcx, M>
 {
     #[inline]
     fn data_layout(&self) -> &layout::TargetDataLayout {
@@ -157,7 +157,16 @@ impl<'c, 'b, 'a, 'mir, 'tcx, M: Machine<'a, 'mir, 'tcx>> HasDataLayout
     }
 }
 
-impl<'b, 'a, 'mir, 'tcx, M> layout::HasTyCtxt<'tcx> for &'b EvalContext<'a, 'mir, 'tcx, M>
+impl<'a, 'mir, 'tcx, M: Machine<'a, 'mir, 'tcx>> HasDataLayout
+    for & &mut EvalContext<'a, 'mir, 'tcx, M>
+{
+    #[inline]
+    fn data_layout(&self) -> &layout::TargetDataLayout {
+        &self.tcx.data_layout
+    }
+}
+
+impl<'a, 'mir, 'tcx, M> layout::HasTyCtxt<'tcx> for &EvalContext<'a, 'mir, 'tcx, M>
     where M: Machine<'a, 'mir, 'tcx>
 {
     #[inline]
@@ -166,8 +175,8 @@ impl<'b, 'a, 'mir, 'tcx, M> layout::HasTyCtxt<'tcx> for &'b EvalContext<'a, 'mir
     }
 }
 
-impl<'c, 'b, 'a, 'mir, 'tcx, M: Machine<'a, 'mir, 'tcx>> layout::HasTyCtxt<'tcx>
-    for &'c &'b mut EvalContext<'a, 'mir, 'tcx, M>
+impl<'a, 'mir, 'tcx, M: Machine<'a, 'mir, 'tcx>> layout::HasTyCtxt<'tcx>
+    for & &mut EvalContext<'a, 'mir, 'tcx, M>
 {
     #[inline]
     fn tcx<'d>(&'d self) -> TyCtxt<'d, 'tcx, 'tcx> {
@@ -175,8 +184,8 @@ impl<'c, 'b, 'a, 'mir, 'tcx, M: Machine<'a, 'mir, 'tcx>> layout::HasTyCtxt<'tcx>
     }
 }
 
-impl<'b, 'a, 'mir, 'tcx, M: Machine<'a, 'mir, 'tcx>> LayoutOf
-    for &'b EvalContext<'a, 'mir, 'tcx, M>
+impl<'a, 'mir, 'tcx, M: Machine<'a, 'mir, 'tcx>> LayoutOf
+    for &EvalContext<'a, 'mir, 'tcx, M>
 {
     type Ty = Ty<'tcx>;
     type TyLayout = EvalResult<'tcx, TyLayout<'tcx>>;
@@ -188,8 +197,8 @@ impl<'b, 'a, 'mir, 'tcx, M: Machine<'a, 'mir, 'tcx>> LayoutOf
     }
 }
 
-impl<'c, 'b, 'a, 'mir, 'tcx, M: Machine<'a, 'mir, 'tcx>> LayoutOf
-    for &'c &'b mut EvalContext<'a, 'mir, 'tcx, M>
+impl<'a, 'mir, 'tcx, M: Machine<'a, 'mir, 'tcx>> LayoutOf
+    for & &mut EvalContext<'a, 'mir, 'tcx, M>
 {
     type Ty = Ty<'tcx>;
     type TyLayout = EvalResult<'tcx, TyLayout<'tcx>>;
